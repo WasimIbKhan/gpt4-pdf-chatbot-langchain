@@ -12,8 +12,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import DropFileInput from '../components/drop-file-input/DropFileInput';
 
 export default function Home() {
+  const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -119,6 +121,15 @@ export default function Home() {
       e.preventDefault();
     }
   };
+
+  const onFileChange = (files: File[] | null) => { // Accept File[] or null
+    if (files) {
+        setFiles(files);
+    }
+};
+
+const handleFileSubmit = async () => {
+};
 
   return (
     <>
@@ -259,12 +270,14 @@ export default function Home() {
               </div>
             )}
           </main>
+          <div className="box">
+            <h2 className="header">Dropbox</h2>
+            <DropFileInput onFileChange={onFileChange} />
+            <button className="submit-button" onClick={handleFileSubmit}>
+                Submit
+            </button>
         </div>
-        <footer className="m-auto p-4">
-          <a href="https://twitter.com/mayowaoshin">
-            Powered by LangChainAI. Demo built by Mayo (Twitter: @mayowaoshin).
-          </a>
-        </footer>
+        </div>
       </Layout>
     </>
   );
