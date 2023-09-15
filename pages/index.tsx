@@ -138,7 +138,8 @@ const handleFileSubmit = async () => {
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
             Chat With Your Docs
           </h1>
-          <main className={styles.main}>
+          <div className={styles.flexContainer}>
+            <main className={styles.header}>
             <div className={styles.cloud}>
               <div ref={messageListRef} className={styles.messagelist}>
                 {messages.map((message, index) => {
@@ -269,14 +270,15 @@ const handleFileSubmit = async () => {
                 <p className="text-red-500">{error}</p>
               </div>
             )}
-          </main>
-          <div className="box">
-            <h2 className="header">Dropbox</h2>
-            <DropFileInput onFileChange={onFileChange} />
-            <button className="submit-button" onClick={handleFileSubmit}>
-                Submit
-            </button>
-        </div>
+            </main>
+            <div className={styles.box}>
+              <h2 className={styles.headerbox}>Drop Files</h2>
+              <DropFileInput onFileChange={onFileChange} />
+              <button className={styles.submitButton} onClick={handleFileSubmit}>
+                  Submit
+              </button>
+            </div>
+            </div>
         </div>
       </Layout>
     </>

@@ -1,9 +1,16 @@
 .dropFileInput {
     position: relative;
-    width: 400px;
+    width: auto;
     height: 200px;
     border: 2px dashed var(--border-color);
     border-radius: 20px;
+    --body-bg: #f5f8ff;
+    --box-bg: #fff;
+    --input-bg: #f5f8ff;
+    --txt-color: #2f2d2f;
+    --txt-second-color: #ccc;
+    --border-color: #4267b2;
+    --box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,15 +32,14 @@
     opacity: 0.6;
 }
 
-.dropFileInputLabel {
-    text-align: center;
+.dropFileInput_label {
     color: var(--txt-second-color);
     font-weight: 600;
-    padding: 10px;
 }
 
-.dropFileInputLabel img {
+.dropFileInput_label img {
     width: 100px;
+    margin-left: 50px;
 }
 
 .dropFilePreview {
@@ -44,11 +50,11 @@
     font-weight: 500;
 }
 
-.dropFilePreviewTitle {
+.dropFilePreview_title {
     margin-bottom: 20px;
 }
 
-.dropFilePreviewItem {
+.dropFilePreview_item {
     position: relative;
     display: flex;
     margin-bottom: 10px;
@@ -57,18 +63,18 @@
     border-radius: 20px;
 }
 
-.dropFilePreviewItem img {
+.dropFilePreview_item img {
     width: 50px;
     margin-right: 20px;
 }
 
-.dropFilePreviewItemInfo {
+.dropFilePreview_item_info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-.dropFilePreviewItemDel {
+.dropFilePreview_item_del {
     background-color: var(--box-bg);
     width: 40px;
     height: 40px;
@@ -86,17 +92,6 @@
     transition: opacity 0.3s ease;
 }
 
-.dropFilePreviewItem:hover .dropFilePreviewItemDel {
+.dropFilePreview_item:hover .dropFilePreview_item_del {
     opacity: 1;
-}
-
-.visuallyHidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
 }
