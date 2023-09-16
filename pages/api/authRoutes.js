@@ -6,8 +6,9 @@ const { MongoClient } = require('mongodb');
 
 const router = express.Router();
 
-const MONGO_URI = 'mongodb+srv://wasimibkhan:BAKDIKdqJsvn8X2e@cluster0.txfwy7a.mongodb.net/?retryWrites=true&w=majority';
-const JWT_SECRET = 'YOUR_SECRET_KEY'; // This should be a long, unguessable string
+JWT_SECRET=process.env.JWT_SECRET
+MONGODB_URI=process.env.MONGODB_URI
+
 
 router.post('/register', async (req, res) => {
     const { username, password } = req.body;
