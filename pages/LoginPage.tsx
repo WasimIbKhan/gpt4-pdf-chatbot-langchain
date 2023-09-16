@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import {loginUser} from '../store/actions/auth.js';
 import Image from 'next/image';
 import logo from '../assets/images/logo.png';
 import facebook from '../assets/images/facebook.png';
 import google from '../assets/images/google.png';
 import linkedin from '../assets/images/linkedin.png';
 import styles from '@/styles/login.module.scss';
+import { AppDispatch } from '@/pages/_app';
 
 function Login() {
+    const dispatch = useDispatch<AppDispatch>()
     const [login, signup] = useState(true);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const handleLogin = (): void => {
+        dispatch(loginUser(email, password));
+    };
+    
     return (
         <div className={styles.login}>
             <div className={`${styles['login__colored-container']} ${login ? styles['login__colored-container--left'] : styles['login__colored-container--right']}`}></div>
@@ -92,7 +100,7 @@ function Login() {
                     <div className={styles['login__login-container__main-container__form-container']}>
                         <form className={styles['login__login-container__main-container__form-container__form']} onSubmit={(e) => {
                             e.preventDefault();
-                            console.log('signin')
+                            handleLogin()
                         }}>
                             <input
                                 className={styles['login__login-container__main-container__form-container__form--email']}
@@ -110,7 +118,7 @@ function Login() {
                                 required />
                             <button
                                 className={styles['login__login-container__main-container__form-container__form--submit']}>
-                                Sign In
+                                Log In
                             </button>
                         </form>
                     </div>
