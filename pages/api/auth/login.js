@@ -11,10 +11,10 @@ export default async (req, res) => {
   try {
     if (req.method === 'POST') {
       const { email, password } = req.body;
-  
       const client = new MongoClient(MONGODB_URI);
       await client.connect();
-      const db = client.db('chatbotDB');
+      const db = client.db("chatbotDB");
+      await db.command({ ping: 1 });  
       const user = await db.collection('users').findOne({ email });
       
       if (user && bcrypt.compareSync(password, user.password)) {
@@ -31,6 +31,7 @@ export default async (req, res) => {
       res.status(405).end(); // Method Not Allowed
     }
   } catch (error) {
-    console.log(error)
+    console.error("Error in login:", error);
+    res.status(500).send({ error: "Internal Server Error" });
   }
 };

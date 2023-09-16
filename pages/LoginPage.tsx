@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {loginUser} from '../store/actions/auth.js';
+import {loginUser, signupUser} from '../store/actions/auth.js';
 import Image from 'next/image';
 import logo from '../assets/images/logo.png';
 import facebook from '../assets/images/facebook.png';
@@ -18,6 +18,9 @@ function Login() {
 
     const handleLogin = (): void => {
         dispatch(loginUser(email, password));
+    };
+    const handleSignup = (): void => {
+        dispatch(signupUser(email, password));
     };
     
     return (
@@ -55,15 +58,8 @@ function Login() {
                 <div className={styles['login__create-container__form-container']}>
                     <form className={styles['login__create-container__form-container__form']} onSubmit={(e) => {
                         e.preventDefault();
-                        console.log('signup')
+                        handleSignup()
                     }}>
-                        <input
-                            className={styles['login__create-container__form-container__form--name']}
-                            type="text"
-                            placeholder="Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required />
                         <input
                             className={styles['login__create-container__form-container__form--email']}
                             type="email"

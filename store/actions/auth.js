@@ -4,8 +4,9 @@ import axios from 'axios';
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     const { data } = await axios.post('/api/auth/login', { email, password });
+    console.log(data)
     dispatch({ type: LOGIN_SUCCESS, payload: data });
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem('authToken', JSON.stringify(data.token));
   } catch (error) {
     dispatch({
       type: 'LOGIN_FAILURE',
@@ -14,14 +15,15 @@ export const loginUser = (email, password) => async (dispatch) => {
   }
 };
 
-export const signup = (email, password) => async (dispatch) => {
+export const signupUser = (email, password) => async (dispatch) => {
   try {
       const { data } = await axios.post('/api/auth/signup', { email, password });
+      console.log(data)
       dispatch({ type: LOGIN_SUCCESS, payload: data });
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('authToken', JSON.stringify(data.token));
   } catch (error) {
       const errorMessage = error.response && error.response.data.message ? error.response.data.message : error.message;
-      dispatch({ type: LOGIN_FAILURE, payload: errorMessage });
+      dispatch({ type: SIGNUP_FAILURE, payload: errorMessage });
   }
 };
 
