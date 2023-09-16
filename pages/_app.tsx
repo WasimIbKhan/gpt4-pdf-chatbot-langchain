@@ -5,11 +5,8 @@ import { createStore, combineReducers, applyMiddleware, Action, Dispatch } from 
 import { Provider } from "react-redux";
 import ReduxThunk, { ThunkAction, ThunkDispatch } from "redux-thunk";
 import authReducer from '../store/reducers/auth';
+import { useEffect } from 'react';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = MONGODB_URI;
 
 const rootReducer = combineReducers({
   auth: authReducer
@@ -27,28 +24,20 @@ const inter = Inter({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  });
 
-  async function run() {
-    try {
-      // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("chatbotDB").command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await client.close();
+  useEffect(() => {
+    async function connectToMongo() {
+      try {
+        const response = await fetch('/api/mongoClient');
+        const data = await response.json();
+        console.log(data.message);
+      } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+      }
     }
-  }
-  run().catch(console.dir);
+
+    connectToMongo();
+  }, []);
   
   return (
     <Provider store={store}>

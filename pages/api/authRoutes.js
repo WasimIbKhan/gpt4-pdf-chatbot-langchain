@@ -31,10 +31,9 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
     const client = new MongoClient(MONGO_URI);
-    await client.connect();
-    const user = await db.collection('users').findOne({ username });
+    try {
+        const user = await db.collection('users').findOne({ username });
 
     if (user && bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign({ id: user._id }, JWT_SECRET, {
@@ -46,6 +45,10 @@ router.post('/login', async (req, res) => {
     }
 
     await client.close();
+    } catch (error) {
+        console.log(error)
+    }
+    
 });
 
 module.exports = router;
