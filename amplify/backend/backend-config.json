@@ -1,6 +1,6 @@
 {
   "auth": {
-    "realsense33def21b": {
+    "realsensea2656bb8": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -28,7 +28,7 @@
     }
   },
   "storage": {
-    "realSenseDocuments": {
+    "s3a1f9e710": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

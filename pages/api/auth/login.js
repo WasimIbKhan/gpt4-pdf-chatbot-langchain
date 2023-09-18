@@ -13,15 +13,6 @@ export default async (req, res) => {
   try {
     if (req.method === 'POST') {
       const { email, password } = req.body;
-      try {
-        const { user } = await Auth.signIn({
-          email,
-          password
-        });
-        console.log(user)
-        } catch (error) {
-            console.log('error signing up:', error);
-        }
       const client = new MongoClient(MONGODB_URI);
       await client.connect();
       const db = client.db("chatbotDB");

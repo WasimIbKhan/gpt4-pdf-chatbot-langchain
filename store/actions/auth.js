@@ -1,11 +1,26 @@
-// actions/userActions.js
+import * as Amplify from 'aws-amplify';
+import awsconfig from '../../src/aws-exports';
+Amplify.configure(awsconfig);
+
 import axios from 'axios';
 
 export const LOGIN = 'LOGIN';
 export const SIGNUP = 'SIGNUP';
 export const LOGOUT = 'LOGOUT';
+
+
+
 export const loginUser = (email, password) => async (dispatch) => {
   try {
+    try {
+      const { user } = await Amplify.Auth.signIn({
+        email,
+        password
+      });
+      console.log(user)
+      } catch (error) {
+          console.log('error signing up:', error);
+      }
     const { data } = await axios.post('/api/auth/login', { email, password });
     localStorage.setItem(
     'userData',
@@ -29,8 +44,9 @@ export const loginUser = (email, password) => async (dispatch) => {
 };
 
 export const signupUser = (email, password) => async (dispatch) => {
+  const { user } = await Amplify.Auth.signUp({email, password});
+  console.log(user)
   const { data } = await axios.post('/api/auth/signup', { email, password });
-  console.log(data);
   localStorage.setItem(
     'userData',
     JSON.stringify({

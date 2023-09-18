@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "realsense33def21b_identitypool_33def21b",
+    "identityPoolName": "realsensea2656bb8_identitypool_a2656bb8",
     "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "realse33def21b",
-    "userPoolName": "realsense33def21b_userpool_33def21b",
+    "resourceNameTruncated": "realsea2656bb8",
+    "userPoolName": "realsensea2656bb8_userpool_a2656bb8",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "realse33def21b_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "realsea2656bb8_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "33def21b",
-    "resourceName": "realsense33def21b",
+    "sharedId": "a2656bb8",
+    "resourceName": "realsensea2656bb8",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [

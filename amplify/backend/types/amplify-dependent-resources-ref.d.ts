@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
-    "realsense33def21b": {
+    "realsensea2656bb8": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "IdentityPoolId": "string",
@@ -11,7 +11,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "realSenseDocuments": {
+    "s3a1f9e710": {
       "BucketName": "string",
       "Region": "string"
     }
