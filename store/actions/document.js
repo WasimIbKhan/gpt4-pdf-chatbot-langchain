@@ -1,0 +1,2 @@
+export const SET_DOCUMENTS = 'SET_DOCUMENTS';
+export const GET_DOCUMENTS = 'GET_DOCUMENTS'

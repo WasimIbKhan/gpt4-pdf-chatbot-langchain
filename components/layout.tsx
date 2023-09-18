@@ -1,12 +1,17 @@
 // ... other imports
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../store/actions/auth'; // Replace with the actual path and action name
 import { AppDispatch } from '@/pages/_app';
+import { RootState } from '@/store/RootState';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 interface LayoutProps {
   children?: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>()
 
   const handleLogout = (): void => {
@@ -14,6 +19,13 @@ export default function Layout({ children }: LayoutProps) {
     // You can also add any other logic here, like redirecting the user
   };
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/'); // Redirect to login page
+    }
+  }, [isAuthenticated]);
+
+  
   return (
     <div className="mx-auto flex flex-col space-y-4">
       <header className="container sticky top-0 z-40 bg-white">

@@ -1,12 +1,13 @@
 // actions/userActions.js
 import axios from 'axios';
+
 export const LOGIN = 'LOGIN';
 export const SIGNUP = 'SIGNUP';
 export const LOGOUT = 'LOGOUT';
 export const loginUser = (email, password) => async (dispatch) => {
   try {
     const { data } = await axios.post('/api/auth/login', { email, password });
-  localStorage.setItem(
+    localStorage.setItem(
     'userData',
     JSON.stringify({
       auth: true,

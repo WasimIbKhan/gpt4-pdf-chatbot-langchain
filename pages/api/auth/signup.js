@@ -1,3 +1,7 @@
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from '../../../src/aws-exports';
+Amplify.configure(awsconfig);
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { MongoClient } from 'mongodb';
@@ -9,6 +13,8 @@ export default async (req, res) => {
   try {
     if (req.method === 'POST') {
       const { email, password } = req.body;
+      const { user } = await Auth.signUp({email, password});
+      console.log(user)
       const client = new MongoClient(MONGODB_URI);
       await client.connect();
       const db = client.db("chatbotDB");

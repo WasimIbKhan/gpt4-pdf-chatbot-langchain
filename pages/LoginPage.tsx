@@ -11,25 +11,34 @@ import { AppDispatch } from '@/pages/_app';
 
 function Login() {
     const dispatch = useDispatch<AppDispatch>()
-    const [login, signup] = useState(true);
-    const [name, setName] = useState('');
+    const [login, signup] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const [confirmPassword, setConfirmPassword] = useState('');
+    
     const handleLogin = (): void => {
         dispatch(loginUser(email, password));
     };
     const handleSignup = (): void => {
-        dispatch(signupUser(email, password));
+        if (passwordsMatch(password, confirmPassword)) {
+            dispatch(signupUser(email, password));
+        } else {
+            console.log("Passwords do not match!");
+        }
+        
     };
     
+    function passwordsMatch(password: String, confirmPassword: String) {
+        return password === confirmPassword;
+    }
+
     return (
         <div className={styles.login}>
             <div className={`${styles['login__colored-container']} ${login ? styles['login__colored-container--left'] : styles['login__colored-container--right']}`}></div>
             <div className={`${styles['login__welcome-back']} ${login ? styles['login__welcome-back--active'] : styles['login__welcome-back--inactive']}`}>
                 <div className={styles['login__welcome-back__logo-container']}>
                     <Image className={styles['login__welcome-back__logo-container--image']} src={logo} alt="Budwriter" />
-                    Budwriter
+                    RealSense
                 </div>
                 <div className={styles['login__welcome-back__main-container']}>
                     <div className={styles['login__welcome-back__main-container__text-container']}>
@@ -73,6 +82,13 @@ function Login() {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required />
+                        <input
+                            className={styles['login__create-container__form-container__form--password']}
+                            type="password"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             required />
                         <button
                             className={styles['login__create-container__form-container__form--submit']}>

@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-realsense-dev-181804-authRole",
+      "UnauthRoleArn": "arn:aws:iam::448932819576:role/amplify-realsense-dev-181804-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::448932819576:role/amplify-realsense-dev-181804-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-realsense-dev-181804-deployment",
+      "UnauthRoleName": "amplify-realsense-dev-181804-unauthRole",
+      "StackName": "amplify-realsense-dev-181804",
+      "StackId": "arn:aws:cloudformation:us-west-2:448932819576:stack/amplify-realsense-dev-181804/560e7980-5647-11ee-868b-06da754062a3",
+      "AmplifyAppId": "d371nd2kwm4abx"
+    },
+    "categories": {
+      "auth": {
+        "realsense33def21b": {}
+      },
+      "storage": {
+        "realSenseDocuments": {}
+      }
+    }
+  }
+}
