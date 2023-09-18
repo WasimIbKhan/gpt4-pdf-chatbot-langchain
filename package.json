@@ -27,7 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "langchain": "^0.0.125",
     "lucide-react": "^0.125.0",
-    "mongodb": "^6.1.0",
+    "mongodb": "^5.2.0",
     "next": "13.2.3",
     "pdf-parse": "1.1.1",
     "react": "18.2.0",

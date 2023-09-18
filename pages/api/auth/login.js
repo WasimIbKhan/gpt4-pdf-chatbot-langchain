@@ -1,7 +1,4 @@
 // pages/api/login.js
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../../../src/aws-exports';
-Amplify.configure(awsconfig);
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';

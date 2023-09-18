@@ -1,7 +1,3 @@
-import Amplify, { Auth } from 'aws-amplify';
-import awsconfig from '../../../src/aws-exports';
-Amplify.configure(awsconfig);
-
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { MongoClient } from 'mongodb';

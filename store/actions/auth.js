@@ -1,7 +1,6 @@
-import * as Amplify from 'aws-amplify';
-import awsconfig from '../../src/aws-exports';
-Amplify.configure(awsconfig);
-
+import { Amplify, Auth } from 'aws-amplify';
+import awsExports from '../../src/aws-exports';
+Amplify.configure(awsExports);
 import axios from 'axios';
 
 export const LOGIN = 'LOGIN';
@@ -12,15 +11,6 @@ export const LOGOUT = 'LOGOUT';
 
 export const loginUser = (email, password) => async (dispatch) => {
   try {
-    try {
-      const { user } = await Amplify.Auth.signIn({
-        email,
-        password
-      });
-      console.log(user)
-      } catch (error) {
-          console.log('error signing up:', error);
-      }
     const { data } = await axios.post('/api/auth/login', { email, password });
     localStorage.setItem(
     'userData',
@@ -31,6 +21,17 @@ export const loginUser = (email, password) => async (dispatch) => {
     }),
   );
   console.log(data)
+    try {
+      let username = email
+      const { user } = await Auth.signIn({
+        username,
+        password
+      });
+      console.log(user)
+      } catch (error) {
+          console.log('error signing up:', error);
+      }
+    
   dispatch({
     type: LOGIN,
     auth: true,
@@ -44,7 +45,8 @@ export const loginUser = (email, password) => async (dispatch) => {
 };
 
 export const signupUser = (email, password) => async (dispatch) => {
-  const { user } = await Amplify.Auth.signUp({email, password});
+  const username = email
+  const { user } = await Auth.signUp({username, password});
   console.log(user)
   const { data } = await axios.post('/api/auth/signup', { email, password });
   localStorage.setItem(
