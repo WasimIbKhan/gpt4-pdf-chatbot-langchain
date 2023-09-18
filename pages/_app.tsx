@@ -25,20 +25,6 @@ const inter = Inter({
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-  useEffect(() => {
-    async function connectToMongo() {
-      try {
-        const response = await fetch('/api/mongoClient');
-        const data = await response.json();
-        console.log(data.message);
-      } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-      }
-    }
-
-    connectToMongo();
-  }, []);
-  
   return (
     <Provider store={store}>
       <main className={inter.variable}>

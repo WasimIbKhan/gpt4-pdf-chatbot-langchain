@@ -18,13 +18,15 @@ export default async (req, res) => {
       const user = await db.collection('users').findOne({ email });
       
       if (user && bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, {
+        const tokenPayload = { auth: true, userId: user._id };
+        const token = jwt.sign(tokenPayload, JWT_SECRET, {
           expiresIn: 86400 // expires in 24 hours
         });
-        res.status(200).send({ auth: true, token });
+        res.status(200).send({ auth: true, token: token, userId: user._id });
       } else {
         res.status(401).send({ auth: false, token: null });
       }
+      
   
       await client.close();
     } else {
