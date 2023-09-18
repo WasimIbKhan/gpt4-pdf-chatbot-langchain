@@ -47,6 +47,6 @@ export const signupUser = (email, password) => async (dispatch) => {
 };
 
 export const logout = () => (dispatch) => {
-  localStorage.removeItem('userInfo');
-  dispatch({ type: authToken });
+  localStorage.removeItem('userData');
+  dispatch({ type: LOGOUT });
 };
