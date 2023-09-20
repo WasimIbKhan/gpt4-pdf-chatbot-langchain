@@ -20,14 +20,12 @@ export const loginUser = (email, password) => async (dispatch) => {
       token: data.token,
     }),
   );
-  console.log(data)
     try {
       let username = email
       const { user } = await Auth.signIn({
         username,
         password
       });
-      console.log(user)
       } catch (error) {
           console.log('error signing up:', error);
       }
@@ -47,7 +45,6 @@ export const loginUser = (email, password) => async (dispatch) => {
 export const signupUser = (email, password) => async (dispatch) => {
   const username = email
   const { user } = await Auth.signUp({username, password});
-  console.log(user)
   const { data } = await axios.post('/api/auth/signup', { email, password });
   localStorage.setItem(
     'userData',

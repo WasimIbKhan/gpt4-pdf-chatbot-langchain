@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import Layout from '@/components/layout';
 import styles from '@/styles/Home.module.css';
 import { Message } from '@/types/chat';
@@ -12,14 +12,38 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { addChat, getChats } from '../store/actions/chat';
 import DropFileInput from '../components/drop-file-input/DropFileInput';
-
+import { AppDispatch } from '@/pages/_app';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/RootState';
 export default function Home() {
+  const dispatch = useDispatch<AppDispatch>()
+  const chats = useSelector((state: RootState) => state.chats.chats);
+  console.log("please recieve the chats")
+  console.log(chats)
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const loadMessages = useCallback(async () => {
+    try {
+      await dispatch(getChats());
+    } catch (err: any) {
+      console.log(err.message);
+    }
+    return;
+  },[setLoading]);
+
+  useEffect(() => {
+    setLoading(true);
+    loadMessages().then(() => {
+      setLoading(false);
+    });
+  }, [loadMessages]);
+
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -42,7 +66,7 @@ export default function Home() {
 
   useEffect(() => {
     textAreaRef.current?.focus();
-  }, []);
+  }, [files]);
 
   //handle form submission
   async function handleSubmit(e: any) {
@@ -130,8 +154,19 @@ export default function Home() {
     }
   };
 
-  const handleFileSubmit = async () => {};
-
+  const handleFileSubmit = async () => {
+    if(files && files.length > 0) {
+      dispatch(addChat(chatTitle, files));
+      setFiles([]); // Reset the files state to an empty array after submission
+    }
+  };
+  
+  if(chats.length==0 || loading) {
+    return(
+      <div>Loading</div>
+    )
+  }
+          
   return (
     <>
       <Layout>
@@ -140,6 +175,18 @@ export default function Home() {
             Chat With Your Docs
           </h1>
           <div className={styles.flexContainer}>
+          <div className={styles.sidebar}>
+            <button className={styles.newChatButton} onClick={() => {}}>
+              New Chat
+            </button>
+            <ul className={styles.chatList}>
+              {chats.map((chat, index) => (
+                <li key={index} className={styles.chatItem}>
+                  {chat.chatTitle}
+                </li>
+              ))}
+            </ul>
+          </div>
             <main className={styles.header}>
               <div className={styles.cloud}>
                 <div ref={messageListRef} className={styles.messagelist}>

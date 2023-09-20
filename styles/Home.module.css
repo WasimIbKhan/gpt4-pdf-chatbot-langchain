@@ -27,7 +27,7 @@
   resize: none;
   font-size: 1.1rem;
   padding: 1rem 2rem 1rem 2rem;
-  width: 75vw;
+  width: 70vw;
   border-radius: 0.5rem;
   border: 1px solid #d9d9e3;
   background: #ffffff;
@@ -194,7 +194,7 @@
 }
 
 .cloud {
-  width: 75vw;
+  width: 70vw;
   height: 65vh;
   background: #ffffff;
   border-radius: 0.5rem;
@@ -271,13 +271,12 @@
   justify-content: flex-start;
   align-items: start;
   gap: 20px;
-  border: 1px solid #d9d9e3;
   border-radius: 0.5rem;
   padding: 1rem;
 }
 
 .box {
-  width: 300px;
+  width: 17vw;
   background-color: var(--box-bg);
   padding: 30px;
   border-radius: 20px;
@@ -285,7 +284,7 @@
 }
 .chatTitleInput {
   display: block;
-  width: 240px;
+  width: 13.8vw;
   margin-bottom: 20px;
   padding: 10px 20px;
   border: 1px solid #dbdbdb;
@@ -298,7 +297,7 @@
   border-radius: 0.5rem;
 }
 .headerbox {
-  width: 150px;
+  width: 100px;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 20px;
@@ -320,4 +319,44 @@
 
 .submitButton:hover {
   background-color: #dbdbdb;
+}
+
+/* styles/ChatSidebar.module.css */
+.sidebar {
+  width: 10vw;
+  height: 100vh;
+  border-right: 1px solid #e0e0e0;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.newChatButton {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.newChatButton:hover {
+  background-color: #45a049;
+}
+
+.chatList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.chatItem {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.chatItem:hover {
+  background-color: #f5f5f5;
 }

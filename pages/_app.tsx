@@ -5,11 +5,13 @@ import { createStore, combineReducers, applyMiddleware, Action, Dispatch } from 
 import { Provider } from "react-redux";
 import ReduxThunk, { ThunkAction, ThunkDispatch } from "redux-thunk";
 import authReducer from '../store/reducers/auth';
+import chatReducer from '../store/reducers/chat'
 import { useEffect } from 'react';
 
 
 const rootReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  chats: chatReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
