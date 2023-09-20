@@ -18,10 +18,10 @@ import { AppDispatch } from '@/pages/_app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/RootState';
 export default function Home() {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
   const chats = useSelector((state: RootState) => state.chats.chats);
-  console.log("please recieve the chats")
-  console.log(chats)
+  console.log('please recieve the chats');
+  console.log(chats);
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
   const [query, setQuery] = useState<string>('');
@@ -35,7 +35,7 @@ export default function Home() {
       console.log(err.message);
     }
     return;
-  },[setLoading]);
+  }, [setLoading]);
 
   useEffect(() => {
     setLoading(true);
@@ -52,7 +52,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi, what would you like to learn about this document?',
+        message: 'Hi, please enter the document youd like to learn about?',
         type: 'apiMessage',
       },
     ],
@@ -155,18 +155,21 @@ export default function Home() {
   };
 
   const handleFileSubmit = async () => {
-    if(files && files.length > 0) {
+    if (files && files.length > 0) {
       dispatch(addChat(chatTitle, files));
       setFiles([]); // Reset the files state to an empty array after submission
     }
   };
-  
-  if(chats.length==0 || loading) {
-    return(
-      <div>Loading</div>
-    )
+
+  const handleIngest = async () => {
+    if (chats[0].docs && (chats[0].docs).length > 0) {
+      console.log(chats[0].docs)
+    }
   }
-          
+  if (loading) {
+    return <div>Loading</div>;
+  }
+
   return (
     <>
       <Layout>
@@ -175,18 +178,20 @@ export default function Home() {
             Chat With Your Docs
           </h1>
           <div className={styles.flexContainer}>
-          <div className={styles.sidebar}>
-            <button className={styles.newChatButton} onClick={() => {}}>
-              New Chat
-            </button>
-            <ul className={styles.chatList}>
-              {chats.map((chat, index) => (
-                <li key={index} className={styles.chatItem}>
-                  {chat.chatTitle}
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className={styles.sidebar}>
+              <button className={styles.newChatButton} onClick={() => {}}>
+                New Chat
+              </button>
+              {chats && (
+                <ul className={styles.chatList}>
+                  {chats.map((chat, index) => (
+                    <li key={index} className={styles.chatItem}>
+                      {chat.chatTitle}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <main className={styles.header}>
               <div className={styles.cloud}>
                 <div ref={messageListRef} className={styles.messagelist}>
@@ -327,12 +332,20 @@ export default function Home() {
                 onChange={(e) => setTitle(e.target.value)}
               />
               <DropFileInput onFileChange={onFileChange} />
-              <button
-                className={styles.submitButton}
-                onClick={handleFileSubmit}
-              >
-                Submit
-              </button>
+              <div className={styles.flexContainer}>
+                <button
+                  className={styles.submitButton}
+                  onClick={handleFileSubmit}
+                >
+                  Upload
+                </button>
+                <button
+                  className={styles.submitButton}
+                  onClick={handleIngest}
+                >
+                  Ingest
+                </button>
+              </div>
             </div>
           </div>
         </div>
