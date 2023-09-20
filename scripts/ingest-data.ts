@@ -11,17 +11,17 @@ import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 */
 const filePath = 'docs';
 
-export const run = async () => {
+export const run = async (docLocations: string[], namespace: string) => {
   try {
-    /*load raw docs from the all files in the directory */
+    // const loader = new PDFLoader(filePath);
     const directoryLoader = new DirectoryLoader(filePath, {
       '.pdf': (path) => new PDFLoader(path),
     });
-
     // const loader = new PDFLoader(filePath);
     const rawDocs = await directoryLoader.load();
-
-    /* Split text into chunks */
+  console.log(docLocations)
+  console.log(rawDocs)
+  /*
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
       chunkOverlap: 200,
@@ -31,23 +31,21 @@ export const run = async () => {
     console.log('split docs', docs);
 
     console.log('creating vector store...');
-    /*create and store the embeddings in the vectorStore*/
+    
     const embeddings = new OpenAIEmbeddings();
     const index = pinecone.Index(PINECONE_INDEX_NAME); //change to your own index name
 
     //embed the PDF documents
     await PineconeStore.fromDocuments(docs, embeddings, {
       pineconeIndex: index,
-      namespace: PINECONE_NAME_SPACE,
+      namespace: namespace,
       textKey: 'text',
     });
+  */
   } catch (error) {
     console.log('error', error);
     throw new Error('Failed to ingest your data');
+    
   }
+  
 };
-
-(async () => {
-  await run();
-  console.log('ingestion complete');
-})();

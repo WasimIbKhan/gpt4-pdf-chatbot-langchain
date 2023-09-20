@@ -17,11 +17,12 @@ import DropFileInput from '../components/drop-file-input/DropFileInput';
 import { AppDispatch } from '@/pages/_app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/RootState';
+
+import { run } from '../scripts/ingest-data';
+
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const chats = useSelector((state: RootState) => state.chats.chats);
-  console.log('please recieve the chats');
-  console.log(chats);
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
   const [query, setQuery] = useState<string>('');
@@ -162,10 +163,31 @@ export default function Home() {
   };
 
   const handleIngest = async () => {
-    if (chats[0].docs && (chats[0].docs).length > 0) {
-      console.log(chats[0].docs)
+    if (chats[0].docs && chats[0].docs.length > 0) {
+        try {
+            const response = await fetch('/api/ingestDocuments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    docLocations: chats[0].docs,
+                    namespace: chats[0].chatTitle,
+                }),
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                console.error(data.error);
+            } else {
+                console.log(data.message);
+            }
+        } catch (error) {
+            console.error("Error during ingestion:", error);
+        }
     }
-  }
+};
+
   if (loading) {
     return <div>Loading</div>;
   }
