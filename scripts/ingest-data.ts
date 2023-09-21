@@ -2,7 +2,8 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { pinecone } from '@/utils/pinecone-client';
-import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
+import AmplifyLoader from '../utils/AmplifyLoader'
+//import { PDFLoader } from 'langchain/document_loaders/fs/AmplifyPDFLoader';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 
@@ -13,13 +14,14 @@ const filePath = 'docs';
 
 export const run = async (docLocations: string[], namespace: string) => {
   try {
-    // const loader = new PDFLoader(filePath);
-    const directoryLoader = new DirectoryLoader(filePath, {
-      '.pdf': (path) => new PDFLoader(path),
-    });
-    // const loader = new PDFLoader(filePath);
-    const rawDocs = await directoryLoader.load();
-  console.log(docLocations)
+    const rawDocs = [];
+
+    // Assuming you're inside an async function
+    for (const location of docLocations) {
+        const loader = new AmplifyLoader(location);
+        const loadedDocs = await loader.load();
+        rawDocs.push(...loadedDocs);
+    }
   console.log(rawDocs)
   /*
     const textSplitter = new RecursiveCharacterTextSplitter({
