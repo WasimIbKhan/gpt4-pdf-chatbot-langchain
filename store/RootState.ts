@@ -2,6 +2,7 @@ import Chat from "@/models/Chat";
 
 export interface RootState {
   auth: {
+    userId: String;
     isAuthenticated: boolean;
   },
   chats: {

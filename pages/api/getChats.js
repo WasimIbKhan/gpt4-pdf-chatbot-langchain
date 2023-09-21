@@ -2,6 +2,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default async (req, res) => {
   try {
     if (req.method === 'GET') {

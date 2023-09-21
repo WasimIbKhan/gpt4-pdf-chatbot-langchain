@@ -21,8 +21,10 @@ import { RootState } from '@/store/RootState';
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
+  const userId = useSelector((state: RootState) => state.auth.userId);
   const chats = useSelector((state: RootState) => state.chats.chats);
   const index = useSelector((state: RootState) => state.chats.index);
+  const [chatId, setChatId] = useState('000000000')
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
   const [serverFiles, setServerFiles] = useState<string[]>([]);
@@ -131,16 +133,40 @@ export default function Home() {
         }));
       }
       console.log('messageState', messageState);
-
+      const response1 = await fetch('/api/updateHistory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          newHistory: [[question, data.text]],
+          userId: userId,
+          chatId: chatId,
+        }),
+      });
+      
+      if (!response1.ok) {
+        console.error('Error during updating history:', await response1.text());
+        return;
+      }
+      
+      // Continue with JSON parsing and further processing...
+      
+      
+        const data1 = await response1.json();
+        if (data1.error) {
+          console.error(data1.error);
+        } else {
+          console.log(data1.message);
+        }
+      } catch (error) {
+        console.error("Error during updating history:", error);
+      }
+    
       setLoading(false);
 
       //scroll to bottom
       messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
-    } catch (error) {
-      setLoading(false);
-      setError('An error occurred while fetching the data. Please try again.');
-      console.log('error', error);
-    }
   }
 
   //prevent empty submissions
@@ -157,6 +183,7 @@ export default function Home() {
     const chat = chats[index]
     setTitle(chat.chatTitle)
     setServerFiles(chat.docs)
+    setChatId(chat.chat_id)
   }
   const onFileChange = (files: File[] | null) => {
     // Accept File[] or null
