@@ -3,7 +3,6 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 import { pinecone } from '@/utils/pinecone-client';
 import AmplifyLoader from '../utils/AmplifyLoader'
-//import { PDFLoader } from 'langchain/document_loaders/fs/AmplifyPDFLoader';
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 
@@ -22,8 +21,7 @@ export const run = async (docLocations: string[], namespace: string) => {
         const loadedDocs = await loader.load();
         rawDocs.push(...loadedDocs);
     }
-  console.log(rawDocs)
-  /*
+
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
       chunkOverlap: 200,
@@ -43,7 +41,7 @@ export const run = async (docLocations: string[], namespace: string) => {
       namespace: namespace,
       textKey: 'text',
     });
-  */
+
   } catch (error) {
     console.log('error', error);
     throw new Error('Failed to ingest your data');

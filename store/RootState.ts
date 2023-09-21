@@ -6,6 +6,7 @@ export interface RootState {
   },
   chats: {
     chats: Chat[]; // Use the Chat type here
+    index: number;
   }
   // ... other slices of state
 }

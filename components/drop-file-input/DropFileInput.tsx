@@ -8,6 +8,7 @@ import uploadImg from '../../assets/cloud-upload-regular-240.png';
 
 interface DropFileInputProps {
     onFileChange: (files: File[]) => void;
+    serverFiles:[]
 }
 
 const DropFileInput: React.FC<DropFileInputProps> = (props) => {
@@ -86,6 +87,15 @@ const DropFileInput: React.FC<DropFileInputProps> = (props) => {
                     ))}
                 </div>
             ) : null}
+            {props.serverFiles.map((fileName, index) => (
+                <div key={index} className={styles.dropFilePreview_item}>
+                    <Image src={ImageConfig['default']} alt="File Preview" />
+                    <div className={styles.dropFilePreview_item_info}>
+                    <p>{fileName}</p>
+                    <p>Unknown Size</p>
+                    </div>
+                </div>
+                ))}
         </>
     );
 };

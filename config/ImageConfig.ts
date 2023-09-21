@@ -13,7 +13,7 @@ type ImageConfigType = {
 };
 
 export const ImageConfig: ImageConfigType = {
-    default: fileDefault,
+    default: filePdf,
     pdf: filePdf,
     png: filePng,
     css: fileCSS,

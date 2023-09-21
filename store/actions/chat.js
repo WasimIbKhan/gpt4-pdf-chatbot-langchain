@@ -1,5 +1,6 @@
-export const GET_CHATS = 'GET_CHATS';
+export const GET_CHATS = 'GET_CHATS'
 export const ADD_CHAT = 'ADD_CHAT'
+export const SWITCH_CHAT = 'SWITCH_CHAT'
 
 import { Storage } from 'aws-amplify';
 
@@ -70,9 +71,8 @@ export const getChats = () => async (dispatch, getState) => {
         });
         console.log(`Uploaded file: ${result.key}`);
   
-        // Get the file URL after uploading
-        const fileURL = await Storage.get(result.key);
-        fileLocations.push(fileURL);
+        
+        fileLocations.push(result.key);
       }
     } catch (error) {
       console.error('Error uploading files:', error);
@@ -81,4 +81,8 @@ export const getChats = () => async (dispatch, getState) => {
     return fileLocations;
   };
   
+  export const switchChat = (index) => async (dispatch) => {
+    dispatch({type: SWITCH_CHAT,
+      index: index})
+  }
   

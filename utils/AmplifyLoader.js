@@ -10,9 +10,12 @@ export class AmplifyPDFLoader {
 
     async loadFromS3() {
         try {
-            const signedURL = await Storage.get(this.s3Url);
+            const signedURL = await Storage.get(this.s3Url, { expires: 60 }); // you can adjust the expiration time as needed
             console.log(signedURL)
-            const response = await fetch(signedURL);
+            const response = await fetch(signedURL); // use signedURL here
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.arrayBuffer();
             return data;
         } catch (error) {
@@ -20,6 +23,7 @@ export class AmplifyPDFLoader {
             throw error;
         }
     }
+    
 
     async parse(raw, metadata) {
         const { getDocument, version } = await this.pdfjs();

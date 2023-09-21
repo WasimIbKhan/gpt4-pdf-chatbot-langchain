@@ -12,38 +12,41 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { addChat, getChats } from '../store/actions/chat';
+import { addChat, getChats, switchChat } from '../store/actions/chat';
 import DropFileInput from '../components/drop-file-input/DropFileInput';
 import { AppDispatch } from '@/pages/_app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/RootState';
 
-import { run } from '../scripts/ingest-data';
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const chats = useSelector((state: RootState) => state.chats.chats);
+  const index = useSelector((state: RootState) => state.chats.index);
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
+  const [serverFiles, setServerFiles] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [pageLoading, setPageLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadMessages = useCallback(async () => {
+  const loadChats = useCallback(async () => {
     try {
       await dispatch(getChats());
+     
     } catch (err: any) {
       console.log(err.message);
     }
     return;
-  }, [setLoading]);
+  }, [dispatch, setLoading]);
 
   useEffect(() => {
     setLoading(true);
-    loadMessages().then(() => {
+    loadChats().then(() => {
       setLoading(false);
     });
-  }, [loadMessages]);
+  }, [dispatch, loadChats]);
 
   const [messageState, setMessageState] = useState<{
     messages: Message[];
@@ -67,7 +70,7 @@ export default function Home() {
 
   useEffect(() => {
     textAreaRef.current?.focus();
-  }, [files]);
+  }, [files, index]);
 
   //handle form submission
   async function handleSubmit(e: any) {
@@ -105,6 +108,7 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
+          chatTitle
         }),
       });
       const data = await response.json();
@@ -148,6 +152,12 @@ export default function Home() {
     }
   };
 
+  const handleSwitchChat = async(index: number) => {
+    await dispatch(switchChat(index))
+    const chat = chats[index]
+    setTitle(chat.chatTitle)
+    setServerFiles(chat.docs)
+  }
   const onFileChange = (files: File[] | null) => {
     // Accept File[] or null
     if (files) {
@@ -163,6 +173,10 @@ export default function Home() {
   };
 
   const handleIngest = async () => {
+    if (!chatTitle.trim()) {
+      alert('Please enter a Chat Title before uploading.');
+      return;
+    }
     if (chats[0].docs && chats[0].docs.length > 0) {
         try {
             const response = await fetch('/api/ingestDocuments', {
@@ -186,29 +200,29 @@ export default function Home() {
             console.error("Error during ingestion:", error);
         }
     }
+  
 };
-
-  if (loading) {
-    return <div>Loading</div>;
-  }
 
   return (
     <>
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-            Chat With Your Docs
+            {chatTitle}
           </h1>
           <div className={styles.flexContainer}>
             <div className={styles.sidebar}>
-              <button className={styles.newChatButton} onClick={() => {}}>
-                New Chat
-              </button>
               {chats && (
                 <ul className={styles.chatList}>
-                  {chats.map((chat, index) => (
-                    <li key={index} className={styles.chatItem}>
-                      {chat.chatTitle}
+                  {chats && chats.map((chat, index) => (
+                    <li key={index} className={styles.chatItem} onClick={() => handleSwitchChat(index)}>
+                      {index === 0 ? (
+                        <button className={styles.newChatButton} onClick={() => { handleSwitchChat(0)}}>
+                          New Chat
+                        </button>
+                      ) : (
+                        chat.chatTitle
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -353,7 +367,7 @@ export default function Home() {
                 value={chatTitle}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <DropFileInput onFileChange={onFileChange} />
+              <DropFileInput onFileChange={onFileChange} serverFiles = {serverFiles}/>
               <div className={styles.flexContainer}>
                 <button
                   className={styles.submitButton}
