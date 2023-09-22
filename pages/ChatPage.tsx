@@ -18,16 +18,15 @@ import { AppDispatch } from '@/pages/_app';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/RootState';
 
-
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useSelector((state: RootState) => state.auth.userId);
   const chats = useSelector((state: RootState) => state.chats.chats);
   const index = useSelector((state: RootState) => state.chats.index);
-  const [chatId, setChatId] = useState('000000000')
+  const [chatId, setChatId] = useState('000000000');
   const [chatTitle, setTitle] = useState('');
   const [files, setFiles] = useState<File[] | null>([]); // Use File[] or null
-  const [serverFiles, setServerFiles] = useState<string[]>([]);
+  const [serverFiles, setServerFiles] = useState<[]>([]);
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [pageLoading, setPageLoading] = useState<boolean>(false);
@@ -36,7 +35,6 @@ export default function Home() {
   const loadChats = useCallback(async () => {
     try {
       await dispatch(getChats());
-     
     } catch (err: any) {
       console.log(err.message);
     }
@@ -110,7 +108,7 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
-          chatTitle
+          chatTitle,
         }),
       });
       const data = await response.json();
@@ -144,29 +142,28 @@ export default function Home() {
           chatId: chatId,
         }),
       });
-      
+
       if (!response1.ok) {
         console.error('Error during updating history:', await response1.text());
         return;
       }
-      
-      // Continue with JSON parsing and further processing...
-      
-      
-        const data1 = await response1.json();
-        if (data1.error) {
-          console.error(data1.error);
-        } else {
-          console.log(data1.message);
-        }
-      } catch (error) {
-        console.error("Error during updating history:", error);
-      }
-    
-      setLoading(false);
 
-      //scroll to bottom
-      messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
+      // Continue with JSON parsing and further processing...
+
+      const data1 = await response1.json();
+      if (data1.error) {
+        console.error(data1.error);
+      } else {
+        console.log(data1.message);
+      }
+    } catch (error) {
+      console.error('Error during updating history:', error);
+    }
+
+    setLoading(false);
+
+    //scroll to bottom
+    messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
   }
 
   //prevent empty submissions
@@ -178,13 +175,32 @@ export default function Home() {
     }
   };
 
-  const handleSwitchChat = async(index: number) => {
-    await dispatch(switchChat(index))
-    const chat = chats[index]
-    setTitle(chat.chatTitle)
-    setServerFiles(chat.docs)
-    setChatId(chat.chat_id)
-  }
+  const handleSwitchChat = async (index: number) => {
+    await dispatch(switchChat(index));
+    const chat = chats[index];
+    setTitle(chat.chatTitle);
+    setServerFiles(chat.docs);
+    setChatId(chat.chat_id);
+    const newHistory: [string, string][] = [];
+
+    // Check if the chat has a history property
+    if (chat.history && Array.isArray(chat.history)) {
+      // Loop through the history array of the selected chat
+      chat.history.forEach((qaPair) => {
+        // Check if the qaPair is a valid array with at least two elements
+        if (Array.isArray(qaPair) && qaPair.length >= 2) {
+          // Push each question-answer pair to the newHistory array
+          newHistory.push([qaPair[0], qaPair[1]]);
+        }
+      });
+    }
+    // Update the messageState with the newHistory array
+    setMessageState((state) => ({
+      ...state,
+      history: newHistory,
+    }));
+    console.log(messageState.history);
+  };
   const onFileChange = (files: File[] | null) => {
     // Accept File[] or null
     if (files) {
@@ -205,30 +221,29 @@ export default function Home() {
       return;
     }
     if (chats[0].docs && chats[0].docs.length > 0) {
-        try {
-            const response = await fetch('/api/ingestDocuments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    docLocations: chats[0].docs,
-                    namespace: chats[0].chatTitle,
-                }),
-            });
+      try {
+        const response = await fetch('/api/ingestDocuments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            docLocations: chats[0].docs,
+            namespace: chats[0].chatTitle,
+          }),
+        });
 
-            const data = await response.json();
-            if (data.error) {
-                console.error(data.error);
-            } else {
-                console.log(data.message);
-            }
-        } catch (error) {
-            console.error("Error during ingestion:", error);
+        const data = await response.json();
+        if (data.error) {
+          console.error(data.error);
+        } else {
+          console.log(data.message);
         }
+      } catch (error) {
+        console.error('Error during ingestion:', error);
+      }
     }
-  
-};
+  };
 
   return (
     <>
@@ -241,23 +256,73 @@ export default function Home() {
             <div className={styles.sidebar}>
               {chats && (
                 <ul className={styles.chatList}>
-                  {chats && chats.map((chat, index) => (
-                    <li key={index} className={styles.chatItem} onClick={() => handleSwitchChat(index)}>
-                      {index === 0 ? (
-                        <button className={styles.newChatButton} onClick={() => { handleSwitchChat(0)}}>
-                          New Chat
-                        </button>
-                      ) : (
-                        chat.chatTitle
-                      )}
-                    </li>
-                  ))}
+                  {chats &&
+                    chats.map((chat, index) => (
+                      <li
+                        key={index}
+                        className={styles.chatItem}
+                        onClick={() => handleSwitchChat(index)}
+                      >
+                        {index === 0 ? (
+                          <button
+                            className={styles.newChatButton}
+                            onClick={() => {
+                              handleSwitchChat(0);
+                            }}
+                          >
+                            New Chat
+                          </button>
+                        ) : (
+                          chat.chatTitle
+                        )}
+                      </li>
+                    ))}
                 </ul>
               )}
             </div>
             <main className={styles.header}>
               <div className={styles.cloud}>
                 <div ref={messageListRef} className={styles.messagelist}>
+                  {messageState.history.map((messagePair, index) => (
+                    <>
+                      <div
+                        key={`history-question-${index}`}
+                        className={styles.usermessage}
+                      >
+                        <Image
+                          src="/usericon.png"
+                          alt="Me"
+                          width="30"
+                          height="30"
+                          className={styles.usericon}
+                          priority
+                        />
+                        <div className={styles.markdownanswer}>
+                          <ReactMarkdown linkTarget="_blank">
+                            {messagePair[0]} 
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                      <div
+                        key={`history-answer-${index}`}
+                        className={styles.apimessage}
+                      >
+                        <Image
+                          src="/bot-image.png"
+                          alt="AI"
+                          width="40"
+                          height="40"
+                          className={styles.boticon}
+                          priority
+                        />
+                        <div className={styles.markdownanswer}>
+                          <ReactMarkdown linkTarget="_blank">
+                            {messagePair[1]} 
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    </>
+                  ))}
                   {messages.map((message, index) => {
                     let icon;
                     let className;
@@ -394,7 +459,10 @@ export default function Home() {
                 value={chatTitle}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <DropFileInput onFileChange={onFileChange} serverFiles = {serverFiles}/>
+              <DropFileInput
+                onFileChange={onFileChange}
+                serverFiles={serverFiles}
+              />
               <div className={styles.flexContainer}>
                 <button
                   className={styles.submitButton}
@@ -402,10 +470,7 @@ export default function Home() {
                 >
                   Upload
                 </button>
-                <button
-                  className={styles.submitButton}
-                  onClick={handleIngest}
-                >
+                <button className={styles.submitButton} onClick={handleIngest}>
                   Ingest
                 </button>
               </div>
